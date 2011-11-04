@@ -75,10 +75,33 @@ While `git filter-branch` rewrites the history for you, the objects will remain 
 <pre class="terminal">
 tekkub@iSenberg ~/tmp/github-gem master
 $ rm -rf .git/refs/original/
+</pre>
 
+The next step expires reflogs for all refs. This is so the mere fact that you once visited the commit you're removing (or any of its children) will not force git to keep it around.
+
+This isn't a big loss for branches. However, the reflog is how `git stash` keeps track of your stashed work.
+
+If you haven't stashed anything you want to keep, you can skip down to the `git reflog expire`.
+
+But if you have important work stashed, you'll want to save it. First, double-check that none of your stashes were performed on the commit you're removing or any of its children. A quick method is to check `git merge-base`, using the first old commit id listed as "Rewrite" after your `git filter-branch` above. In our case, that's `48dc599`:
+
+<pre class="terminal">
+tekkub@iSenberg ~/tmp/github-gem master
+$ git merge-base -a 48dc599 $(git rev-list --walk-reflogs stash) | grep ^48dc599
+</pre>
+
+If that returns nothing, your stash is clean. Or if it warns "ambiguous argument 'stash'", you don't have a stash. Otherwise, check the history of your stashes (`git log stash@{0}`, `git log stash@{1}`, etc.) to see which contain `48dc599`, and `git stash drop` the offending entries.
+
+Once the above command returns no commits, make a copy of the file `.git/logs/refs/stash`, if any, before issuing the next command.
+
+<pre class="terminal">
 tekkub@iSenberg ~/tmp/github-gem master
 $ git reflog expire --expire=now --all
+</pre>
 
+If you saved `.git/logs/refs/stash`, restore it now.
+
+<pre class="terminal">
 tekkub@iSenberg ~/tmp/github-gem master
 $ git gc --prune=now
 Counting objects: 2437, done.
