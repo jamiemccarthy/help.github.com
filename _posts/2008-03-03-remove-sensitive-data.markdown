@@ -116,5 +116,5 @@ There are a few simple tricks to avoid committing things you don't want committe
 Other reading
 -------------
 
-* [git-filter-branch documentation](http://www.kernel.org/pub/software/scm/git/docs/git-filter-branch.html)
-* [Git user manual - Cleaning up history](http://www.kernel.org/pub/software/scm/git/docs/user-manual.html#cleaning-up-history)
+* [git-filter-branch documentation](http://schacon.github.com/git/git-filter-branch.html)
+* [Git user manual - Cleaning up history](http://schacon.github.com/git/user-manual.html#cleaning-up-history)
